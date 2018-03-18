@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.SeekBar;
+import android.widget.TextView;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -21,6 +22,8 @@ public class MainActivity extends AppCompatActivity {
 
     String lyrics = getFile("thechain");
     MediaPlayer mediaPlayer = MediaPlayer.create(this, R.raw.TheChain);
+    TextView lyricsTV = findViewById(R.id.textViewlyrics);
+    TextView nameSong = findViewById(R.id.songtextView);
     boolean playing = false;
 
     public void playClicked(View view){
@@ -28,10 +31,15 @@ public class MainActivity extends AppCompatActivity {
         if (mediaPlayer.isPlaying()){
             playpauseButton.setBackgroundResource(android.R.drawable.ic_media_pause);
             mediaPlayer.pause();
+            lyricsTV.getAnimation().cancel();
+            lyricsTV.clearAnimation();
         } else{
             playpauseButton.setBackgroundResource(android.R.drawable.ic_media_play);
             mediaPlayer.start();
+            lyricsTV.animate().translationYBy(-4000f).setDuration((mediaPlayer.getDuration()-mediaPlayer.getCurrentPosition())*1000);
         }
+
+
 
 
 
@@ -41,6 +49,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        nameSong.setText(mediaPlayer.toString());
+        lyricsTV.setText(lyrics);
 
         SeekBar seekProg = findViewById(R.id.seekBarProgre);
         seekProg.setMax(mediaPlayer.getDuration());
@@ -63,7 +73,9 @@ public class MainActivity extends AppCompatActivity {
 
                                                 }
                                             }
+
         );
+
 
     }
 
